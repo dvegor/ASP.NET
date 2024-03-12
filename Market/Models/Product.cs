@@ -2,9 +2,9 @@
 {
     public class Product : BaseModel
     {
-        public int Cost { get; set; }
+        public int Price { get; set; }
         public int ProductId { get; set; }
         public virtual ProductGroup? ProductGroup { get; set; }
-        public virtual List<ProductsToStorages> ProductsToStorages { get; set; } = new List<ProductsToStorages>();
+        public virtual List<Storage> Storages { get; set; } = new List<Storage>();
     }
 }
