@@ -73,7 +73,7 @@ namespace Market.Models
                 .HasColumnName("ProductCount");
 
                 entity.HasMany(x => x.Products)
-                .WithMany(mbox => m.Storage)
+                .WithMany(m => m.Storages)
                 .UsingEntity(j => j.ToTable("ProductsToStorages"));
 
             });
