@@ -6,14 +6,14 @@ namespace Market.Models
 {
     public class ProductContext : DbContext
     {
-        public DbSet<ProductsToStorages> ProductsToStorages { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductGroup> ProductGroups { get; set; }
         public DbSet<Storage> Storages { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Username=postgres;Password=example;Database=Market");
+            optionsBuilder.UseSqlServer(@"Server=STEALTH; Database=Market; Integrated Security=true; TrustServerCertificate=True").UseLazyLoadingProxies(); // connection string for ms sql
+            //optionsBuilder.UseNpgsql("Host=localhost;Username=postgres;Password=pass0+word;Database=Market").UseLazyLoadingProxies(); -connectionstring for Postgres
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
