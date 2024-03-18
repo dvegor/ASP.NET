@@ -1,4 +1,5 @@
-﻿using Market.DTO;
+﻿using Market.Abstraction;
+using Market.DTO;
 using Market.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,60 +10,25 @@ namespace Market.Controllers
     [Route("[controller]")]
     public class ProductController : ControllerBase
     {
+
+        private readonly IProductRepository _productRepository;
+        public ProductController(IProductRepository productRepository)
+        {
+            _productRepository = productRepository;
+        }
+
+
         [HttpGet("getProducts")]
         public IActionResult GetProducts()
         {
-            try
-            {
-                using (var context = new ProductContext())
-                {
-                    IQueryable<Product> products = context.Products.Select(x => new Product
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        Description = x.Description,
-                        ProductGroup = x.ProductGroup,
-                        Price = x.Price,
-                        ProductGroupId = x.ProductGroupId,
-                        Storages = x.Storages
-                    });
-                    return Ok(products);
-                }
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
+            var products = _productRepository.GetProducts();
+            return Ok(products);
         }
-        [HttpPost("postProducts")]
-        public IActionResult PostProducts([FromQuery] string name, string description, int price, int productId)
+        [HttpPost("addProducts")]
+        public IActionResult AddProduct([FromBody] DtoProduct dtoProduct)
         {
-            try
-            {
-                using (var context = new ProductContext())
-                {
-                    if (!context.Products.Any(x => x.Name.ToLower().Equals(name.ToLower())))
-                    {
-                        context.Add(new Product()
-                        {
-                            Name = name,
-                            Description = description,
-                            Price = price,
-                            ProductId = productId
-                        });
-                        context.SaveChanges();
-                        return Ok();
-                    }
-                    else
-                    {
-                        return StatusCode(409);
-                    }
-                }
-            }
-            catch
-            {
-                return StatusCode(500);
-            }
+            var result = _productRepository.AddProduct(dtoProduct);
+            return Ok(result);
         }
 
         [HttpDelete("deleteProducts")]
@@ -92,7 +58,7 @@ namespace Market.Controllers
         [HttpPatch("updateProducts")]
         public IActionResult UpdateProducts(
             [FromQuery] string name,
-            [FromBody] DtoProducts dtoUpdateProducts)
+            [FromBody] DtoProduct dtoUpdateProducts)
         {
             try
             {
