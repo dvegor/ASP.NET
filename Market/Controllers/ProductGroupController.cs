@@ -11,8 +11,8 @@ namespace Market.Controllers
     public class ProductGroupController : ControllerBase
     {
 
-        private readonly IProductRepository _productRepository;
-        public ProductGroupController(IProductRepository productRepository)
+        private readonly IProductGroupRepository _productRepository;
+        public ProductGroupController(IProductGroupRepository productRepository)
         {
             _productRepository = productRepository;
         }

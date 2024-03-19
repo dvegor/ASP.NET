@@ -24,6 +24,7 @@ namespace Market.Controllers
             var products = _productRepository.GetProducts();
             return Ok(products);
         }
+
         [HttpPost("addProducts")]
         public IActionResult AddProduct([FromBody] DtoProduct dtoProduct)
         {
