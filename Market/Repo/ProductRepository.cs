@@ -18,7 +18,7 @@ namespace Market.Repo
             using (var context = new ProductContext())
             {
                 var entityGroup = context.ProductGroups.FirstOrDefault(x => x.Name.ToLower() == group.Name.ToLower());
-                if (entityGroup != null)
+                if (entityGroup == null)
                 {
                     entityGroup = _mapper.Map<ProductGroup>(group);
                     context.ProductGroups.Add(entityGroup);
@@ -33,7 +33,7 @@ namespace Market.Repo
             using (var context = new ProductContext())
             {
                 var entityProduct = context.Products.FirstOrDefault(x => x.Name.ToLower() == product.Name.ToLower());
-                if (entityProduct != null)
+                if (entityProduct == null)
                 {
                     entityProduct = _mapper.Map<Product>(product);
                     context.Products.Add(entityProduct);

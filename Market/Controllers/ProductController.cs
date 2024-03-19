@@ -69,8 +69,7 @@ namespace Market.Controllers
                         context.Products.Where(x => x.Name.ToLower().Equals(name.ToLower()))
                         .ExecuteUpdate(setters => setters
                         .SetProperty(x => x.Description, dtoUpdateProducts.Description)
-                        .SetProperty(x => x.Price, dtoUpdateProducts.Price)
-                        .SetProperty(x => x.ProductGroupId, dtoUpdateProducts.ProductGroupId));
+                        .SetProperty(x => x.Price, dtoUpdateProducts.Price));
                         return Ok();
                     }
                     else

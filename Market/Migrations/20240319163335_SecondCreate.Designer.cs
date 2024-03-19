@@ -3,6 +3,7 @@ using Market.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Market.Migrations
 {
     [DbContext(typeof(ProductContext))]
-    partial class ProductContextModelSnapshot : ModelSnapshot
+    [Migration("20240319163335_SecondCreate")]
+    partial class SecondCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,7 +80,7 @@ namespace Market.Migrations
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
-                        .HasColumnName("ProductGroupName");
+                        .HasColumnName("ProductName");
 
                     b.HasKey("Id")
                         .HasName("GroupId");

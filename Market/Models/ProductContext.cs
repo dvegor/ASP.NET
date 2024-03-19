@@ -42,7 +42,7 @@ namespace Market.Models
 
                 entity.HasOne(x => x.ProductGroup)
                 .WithMany(c => c.Products)
-                .HasForeignKey(x => x.ProductId)
+                .HasForeignKey(x => x.ProductGroupId)
                 .HasConstraintName("ProductToGroup");
 
             });
@@ -55,7 +55,7 @@ namespace Market.Models
                 entity.HasIndex(x => x.Name).IsUnique();
 
                 entity.Property(e => e.Name)
-                .HasColumnName("ProductName")
+                .HasColumnName("ProductGroupName")
                 .HasMaxLength(255)
                 .IsRequired();
 
