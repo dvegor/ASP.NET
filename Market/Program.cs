@@ -23,6 +23,8 @@ namespace Market
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IProductGroupRepository, ProducGroupRepository>();
 
+            builder.Services.AddMemoryCache(mc=>mc.TrackStatistics = true);
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

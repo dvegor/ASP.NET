@@ -18,21 +18,21 @@ namespace Market.Controllers
         }
 
 
-        [HttpGet("getProducts")]
+        [HttpGet("get_products")]
         public IActionResult GetProducts()
         {
             var products = _productRepository.GetProducts();
             return Ok(products);
         }
 
-        [HttpPost("addProducts")]
+        [HttpPost("add_products")]
         public IActionResult AddProduct([FromBody] DtoProduct dtoProduct)
         {
             var result = _productRepository.AddProduct(dtoProduct);
             return Ok(result);
         }
 
-        [HttpDelete("deleteProducts")]
+        [HttpDelete("delete_products")]
         public IActionResult DeleteProduct([FromQuery] string name)
         {
             try
@@ -56,7 +56,7 @@ namespace Market.Controllers
             }
         }
 
-        [HttpPatch("updateProducts")]
+        [HttpPatch("update_products")]
         public IActionResult UpdateProducts(
             [FromQuery] string name,
             [FromBody] DtoProduct dtoUpdateProducts)

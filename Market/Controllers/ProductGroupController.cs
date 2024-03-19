@@ -18,20 +18,20 @@ namespace Market.Controllers
         }
 
 
-        [HttpGet("getProductGroups")]
+        [HttpGet("get_groups")]
         public IActionResult GetProductGroups()
         {
             var productGroups = _productRepository.GetProductGroups();
             return Ok(productGroups);
         }
-        [HttpPost("addProductGroups")]
+        [HttpPost("add_groups")]
         public IActionResult AddGroup([FromBody] DtoProductGroup dtoProductGroup)
         {
             var result = _productRepository.AddGroup(dtoProductGroup);
             return Ok(result);
         }
 
-        [HttpDelete("deleteProductGroups")]
+        [HttpDelete("delete_groups")]
         public IActionResult DeleteCategories([FromQuery] string name)
         {
             try
