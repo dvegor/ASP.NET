@@ -2,6 +2,7 @@
 using Market.Abstraction;
 using Market.DTO;
 using Market.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Market.Repo
@@ -10,43 +11,50 @@ namespace Market.Repo
     {
         private readonly IMapper _mapper;
         private readonly IMemoryCache _cache;
-        public ProducGroupRepository(IMapper mapper, IMemoryCache cache)
+        private readonly ProductContext _productContext;
+        public ProducGroupRepository(IMapper mapper, IMemoryCache cache, ProductContext productContext)
         {
             _mapper = mapper;
             _cache = cache;
+            _productContext = productContext;
         }
         public int AddGroup(DtoProductGroup group)
         {
-            
-            using (var context = new ProductContext())
+            var entityGroup = _productContext.ProductGroups.FirstOrDefault(x => x.Name.ToLower() == group.Name.ToLower());
+            if (entityGroup == null)
             {
-                var entityGroup = context.ProductGroups.FirstOrDefault(x => x.Name.ToLower() == group.Name.ToLower());
-                if (entityGroup == null)
-                {
-                    entityGroup = _mapper.Map<ProductGroup>(group);
-                    context.ProductGroups.Add(entityGroup);
-                    context.SaveChanges();
-                    _cache.Remove("groups");
-                }
-                return entityGroup.Id;
+                entityGroup = _mapper.Map<ProductGroup>(group);
+                _productContext.ProductGroups.Add(entityGroup);
+                _productContext.SaveChanges();
+                _cache.Remove("groups");
             }
+            return entityGroup.Id;
         }
 
         public IEnumerable<DtoProductGroup> GetProductGroups()
         {
-            if(_cache.TryGetValue("groups", out List<DtoProductGroup> groups))
+            if (_cache.TryGetValue("groups", out List<DtoProductGroup> groups))
             {
                 return groups;
             }
-
-            using (var context = new ProductContext())
+            var groupsList = _productContext.ProductGroups.Select(x => _mapper.Map<DtoProductGroup>(x)).ToList();
+            _cache.Set("groups", groupsList, TimeSpan.FromMinutes(30));
+            return groupsList;
+        }
+        public bool DelGroup(string name)
+        {
+            if (_productContext.ProductGroups.Any(x => x.Name.ToLower().Equals(name.ToLower())))
             {
-                var groupsList = context.ProductGroups.Select(x => _mapper.Map<DtoProductGroup>(x)).ToList();
-                _cache.Set("groups", groupsList, TimeSpan.FromMinutes(30));
-                return groupsList;
+                _productContext.ProductGroups.Where(x => x.Name.ToLower()
+                .Equals(name.ToLower())).ExecuteDelete();
+                _cache.Remove("categories");
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
-
 
     }
 }

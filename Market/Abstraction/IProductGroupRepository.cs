@@ -7,5 +7,6 @@ namespace Market.Abstraction
     {
         public int AddGroup(DtoProductGroup group);
         public IEnumerable<DtoProductGroup> GetProductGroups();
+        public bool DelGroup(string name);
     }
 }

@@ -25,6 +25,32 @@ namespace Market.Controllers
             return Ok(products);
         }
 
+
+        [HttpGet("get_products_in_CSV")]
+        public IActionResult GetProducts([FromQuery] bool csv, bool url)
+        {
+            if (csv)
+            {
+                var products = _productRepository.GetProductsCsv();
+                if (url)
+                {
+                    string filename = "products" + DateTime.Now.ToBinary().ToString() + ".csv";
+                    System.IO.File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "Files", filename), products);
+                    return Ok("https://" + Request.Host.ToString() + "/static/" + filename);
+                }
+                else
+                {
+                    return File(new System.Text.UTF8Encoding().GetBytes(products), "text/csv", "products.csv");
+                }
+            }
+            else
+            {
+                var products = _productRepository.GetProducts();
+                return Ok(products);
+            }
+        }
+
+
         [HttpPost("add_products")]
         public IActionResult AddProduct([FromBody] DtoProduct dtoProduct)
         {
@@ -37,17 +63,14 @@ namespace Market.Controllers
         {
             try
             {
-                using (var context = new ProductContext())
+                var result = _productRepository.DelProduct(name);
+                if (result)
                 {
-                    if (context.Products.Any(x => x.Name.ToLower().Equals(name.ToLower())))
-                    {
-                        context.Products.Where(x => x.Name.ToLower().Equals(name.ToLower())).ExecuteDelete();
-                        return Ok();
-                    }
-                    else
-                    {
-                        return StatusCode(409);
-                    }
+                    return Ok();
+                }
+                else
+                {
+                    return StatusCode(409, "Продукта с таким именем не существует");
                 }
             }
             catch
@@ -56,27 +79,21 @@ namespace Market.Controllers
             }
         }
 
-        [HttpPatch("update_products")]
+        [HttpPatch("updateProducts")]
         public IActionResult UpdateProducts(
             [FromQuery] string name,
-            [FromBody] DtoProduct dtoUpdateProducts)
+            [FromBody] DtoProduct product)
         {
             try
             {
-                using (var context = new ProductContext())
+                var result = _productRepository.UpdProduct(name, product);
+                if (result)
                 {
-                    if (context.Products.Any(x => x.Name.ToLower().Equals(name.ToLower())))
-                    {
-                        context.Products.Where(x => x.Name.ToLower().Equals(name.ToLower()))
-                        .ExecuteUpdate(setters => setters
-                        .SetProperty(x => x.Description, dtoUpdateProducts.Description)
-                        .SetProperty(x => x.Price, dtoUpdateProducts.Price));
-                        return Ok();
-                    }
-                    else
-                    {
-                        return StatusCode(409);
-                    }
+                    return Ok();
+                }
+                else
+                {
+                    return StatusCode(409, "Продукт не найден");
                 }
             }
             catch

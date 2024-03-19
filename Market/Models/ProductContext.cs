@@ -10,12 +10,17 @@ namespace Market.Models
         public DbSet<ProductGroup> ProductGroups { get; set; }
         public DbSet<Storage> Storages { get; set; }
 
+        public ProductContext(DbContextOptions<ProductContext> dbc) : base(dbc)
+        {
+        }
+        /*
+         Connetion string:
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=STEALTH; Database=Market; Integrated Security=true; TrustServerCertificate=True").UseLazyLoadingProxies(); // connection string for ms sql
-            //optionsBuilder.UseNpgsql("Host=localhost;Username=postgres;Password=pass0+word;Database=Market").UseLazyLoadingProxies(); -connectionstring for Postgres
+            optionsBuilder.UseSqlServer(@"Server=STEALTH; Database=Market; Integrated Security=true; TrustServerCertificate=True").UseLazyLoadingProxies();
+            
         }
-
+        */
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

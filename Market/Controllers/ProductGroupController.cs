@@ -32,23 +32,18 @@ namespace Market.Controllers
         }
 
         [HttpDelete("delete_groups")]
-        public IActionResult DeleteCategories([FromQuery] string name)
+        public IActionResult DelGroup([FromQuery] string name)
         {
             try
             {
-                using (var context = new ProductContext())
+                var result = _productRepository.DelGroup(name);
+                if (result)
                 {
-                    if (context.ProductGroups.Any(x => x.Name.ToLower().Equals(name.ToLower())))
-                    {
-                        context.ProductGroups.Where(x => x.Name.ToLower()
-                        .Equals(name.ToLower()))
-                            .ExecuteDelete();
-                        return Ok();
-                    }
-                    else
-                    {
-                        return StatusCode(409);
-                    }
+                    return Ok();
+                }
+                else
+                {
+                    return StatusCode(409, "Группы с таким именем не существует");
                 }
             }
             catch
